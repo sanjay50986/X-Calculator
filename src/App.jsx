@@ -4,7 +4,12 @@ const App = () => {
   const [inputValue, setInputValue] = useState('');
 
   const handleClick = (value) => {
-    setInputValue((prev) => prev + value);
+    setInputValue((prev) => {
+      if (prev === 'Error' || prev === 'Infinity' || prev === 'NaN') {
+        return value;
+      }
+      return prev + value;
+    });
   };
 
   const handleClear = () => {
@@ -18,7 +23,12 @@ const App = () => {
       const sanitized = inputValue.replace(/\b0+(\d)/g, '$1');
       // eslint-disable-next-line
       const result = eval(sanitized);
-      setInputValue(String(result));
+
+      if (!isFinite(result) || isNaN(result)) {
+        setInputValue('Error');
+      } else {
+        setInputValue(String(result));
+      }
     } catch (error) {
       setInputValue('Error');
     }
@@ -35,7 +45,10 @@ const App = () => {
         e.preventDefault();
         handleCalculate();
       } else if (key === 'Backspace') {
-        setInputValue(prev => prev.slice(0, -1));
+        setInputValue(prev => {
+          if (prev === 'Error' || prev === 'Infinity' || prev === 'NaN') return '';
+          return prev.slice(0, -1);
+        });
       } else if (key === 'Escape') {
         handleClear();
       }
