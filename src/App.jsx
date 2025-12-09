@@ -16,19 +16,16 @@ const App = () => {
   const handleCalculate = () => {
     try {
       if (!inputValue) {
-        setResult("Error");    // ✔ Required for Cypress test
+        setResult("Error"); 
         return;
       }
 
-      // Handle specific 0/0 case
       if (inputValue === "0/0") {
         setResult("NaN");
         return;
       }
 
-      // Prevent leading zeros (08, 09 errors)
       const sanitized = inputValue.replace(/\b0+(\d)/g, '$1');
-
       const calculated = eval(sanitized);
 
       if (isNaN(calculated)) {
@@ -73,8 +70,9 @@ const App = () => {
 
         <div className='input-box'>
           <input type="text" value={inputValue} readOnly />
-          <div className='result'>{result}</div> {/* ✔ Cypress looks for result here */}
         </div>
+
+        <div id="calc-result">{result}</div>
 
         <div className='calculator-buttons'>
           <button onClick={() => handleClick('7')}>7</button>
